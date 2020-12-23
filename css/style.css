@@ -1,0 +1,14 @@
+.bg-black {
+    background-color:rgba(18, 18, 18, 0.94);
+}
+
+.principal-title {
+    text-align: center;
+    color: #fff;
+    font-family: 'Nova Flat', cursive;
+}
+
+.my-label {
+    color: white;
+    font-family: 'Nova Flat', cursive;
+}
