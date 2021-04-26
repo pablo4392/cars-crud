@@ -1,16 +1,9 @@
-const cars = [
-    {
-        id: 0,
-        brand: "Nissan",
-        model: "Versa",
-        year: 2016,
-        color: "blanco",
-        price: "90,000.00"
-    }
-];
+const cars = [];
 
+let updating = false;
+let updatingId = -1;
 
-//funcion para imprimir los elementos agregados
+//Imprimir elementos
 function printCars() {
     const container = document.getElementById('container-cars');
     let html = '';
@@ -23,32 +16,34 @@ function printCars() {
                     <td>${car.color}</td>
                     <td>${car.price}</td>
                     <td>
-                        <button onclick="deleteCar(${car.id})" class="btn btn-outline-danger">
-                            Eliminar
-                        </button>
+                        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                            <button onclick="enableUpdateCar(${car.id})" type="button" class="btn btn-outline-warning">Actualizar</button>
+                            <button onclick="deleteCar(${car.id})" type="button" class="btn btn-outline-danger">Eliminar</button>
+                        </div>
                     </td>
                 </tr>`;
     });
     container.innerHTML = html;
 }
 
-//funcion para eliminar elementos
-function deleteCar(id) {
-    const index = cars.findIndex((car) => car.id == id);
-    cars.splice(index, 1);
-
-    printCars();
-}
-
-//funcion para agregar nuevos elementos
+//Agregar elementos
 function addCar() {
+    //si el valor de updating es verdadero se activara la funcion de actualizar
+    if(updating) {
+        updateCar();
+        return;
+    }
+
     const brand = document.getElementById('brand').value,
           model = document.getElementById('model').value,
           year = document.getElementById('year').value,
           color = document.getElementById('color').value,
           price = document.getElementById('price').value;
+    let id = 1;
 
-    const id = cars[cars.length-1].id+1;
+    if(cars.length > 0) {
+        id = cars[cars.length-1].id+1;
+    }
 
     const newCar = {
         id,
@@ -63,4 +58,53 @@ function addCar() {
     
     document.getElementById('car-form').reset();
 }
- printCars();
+
+//Eliminar elementos
+const deleteCar = (id) => {
+    const index = cars.findIndex((car) => car.id === id);
+    cars.splice(index, 1);
+    
+    printCars();
+}
+
+//Activamos las funciones del update
+const enableUpdateCar = (id) => {
+    updatingId = id;
+    const car = cars.find((car) => car.id === id)
+
+    document.getElementById('brand').value = car.brand;
+    document.getElementById('model').value = car.model;
+    document.getElementById('year').value = car.year;
+    document.getElementById('color').value = car.color;
+    document.getElementById('price').value = car.price;
+
+    updating = true;
+
+    const button = document.getElementById('save');
+    button.textContent = 'Actualizar';
+    button.classList.remove('btn-outline-success');
+    button.classList.add('btn-outline-warning');
+    document.getElementById('cancel').classList.remove('d-none');
+}
+
+//Cancelar funciones del update
+const cancelUpdateCar = () => {
+    document.getElementById('car-form').reset();
+
+    updating = false;
+    updatingId = -1;
+
+    const button = document.getElementById('save');
+          button.textContent = 'Agregar';
+          button.classList.add('btn-outline-success');
+          button.classList.remove('btn-outline-warning');
+    document.getElementById('cancel').classList.add('d-none');
+}
+
+//Actualizar elementos
+const updateCar = () => {
+    // const index = cars.findIndex((car) => car.id === id)
+    alert("holi soy actualizar")
+}
+
+printCars();
