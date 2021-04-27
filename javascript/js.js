@@ -1,4 +1,4 @@
-const cars = [];
+const cars = JSON.parse(localStorage.getItem('cars')) || [];
 
 let updating = false;
 let updatingId = -1;
@@ -55,6 +55,8 @@ function addCar() {
     }
     cars.push(newCar);
     printCars();
+
+    localStorage.setItem('cars', JSON.stringify(cars));
     
     document.getElementById('car-form').reset();
 }
@@ -80,10 +82,11 @@ const enableUpdateCar = (id) => {
 
     updating = true;
 
+    //modifica y agrega propiedades de los botones
     const button = document.getElementById('save');
-    button.textContent = 'Actualizar';
-    button.classList.remove('btn-outline-success');
-    button.classList.add('btn-outline-warning');
+          button.textContent = 'Actualizar';
+          button.classList.remove('btn-outline-success');
+          button.classList.add('btn-outline-warning');
     document.getElementById('cancel').classList.remove('d-none');
 }
 
@@ -94,6 +97,7 @@ const cancelUpdateCar = () => {
     updating = false;
     updatingId = -1;
 
+    //devuelve los botones a su estado original
     const button = document.getElementById('save');
           button.textContent = 'Agregar';
           button.classList.add('btn-outline-success');
@@ -103,8 +107,23 @@ const cancelUpdateCar = () => {
 
 //Actualizar elementos
 const updateCar = () => {
-    // const index = cars.findIndex((car) => car.id === id)
-    alert("holi soy actualizar")
+    const car = cars.find((car) => car.id === updatingId)
+
+    const brand = document.getElementById('brand').value;
+    const model = document.getElementById('model').value;
+    const year = document.getElementById('year').value;
+    const color = document.getElementById('color').value;
+    const price = document.getElementById('price').value;
+
+    car.brand = brand;
+    car.model = model;
+    car.year = year;
+    car.color = color;
+    car.price = price;
+
+    printCars();
+    document.getElementById('car-form').reset();
+    cancelUpdateCar();
 }
 
 printCars();
